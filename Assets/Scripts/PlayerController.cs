@@ -11,8 +11,10 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 10f;
 
     // Physics logic
+    private ContactFilter2D GroundContactFilter;
     private Rigidbody2D rb;
-    private bool isGrounded;
+    private bool isGrounded => rb.IsTouching(GroundContactFilter);
+    
 
     [SerializeField]
     private InputActionReference walk, jump;
@@ -20,7 +22,11 @@ public class PlayerController : MonoBehaviour
     // Create initial rigid body
     void Start()
     {
+        //Define rigid body
         rb = GetComponent<Rigidbody2D>();
+        //Sets the parameters on the contact filter.
+        GroundContactFilter.SetLayerMask(LayerMask.GetMask("Ground"));
+        GroundContactFilter.SetNormalAngle(90f, 90f);
     }
 
     // Update is called once per frame
@@ -32,23 +38,6 @@ public class PlayerController : MonoBehaviour
         if (jump.action.ReadValue<float>() == 1 && isGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-        }
-    }
-
-    //Set all gound objects as "ground"
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = true;
-        }
-    }
-
-    void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = false;
         }
     }
 }
