@@ -6,48 +6,49 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    // Jump parameters
     public float moveSpeed = 5f;
-    public float rotSpeed = 5f;
-    public Rigidbody2D rb;
-    Vector2 moveDirection;
-    public float gunHeat;
-    public float cooloown = 0.25f;
+    public float jumpForce = 10f;
+
+    // Physics logic
+    private Rigidbody2D rb;
+    private bool isGrounded;
 
     [SerializeField]
-    private InputActionReference movement, pointerPosition, attack;
+    private InputActionReference walk, jump;
+
+    // Create initial rigid body
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
 
     // Update is called once per frame
     void Update()
     {
-        moveDirection = movement.action.ReadValue<Vector2>().normalized;
-        rb.linearVelocity = new Vector2(moveDirection.x * moveSpeed, moveDirection.y * moveSpeed);
-        OrientMouse();
+        float moveDirection = walk.action.ReadValue<float>();
+        rb.linearVelocity = new Vector2(moveDirection * moveSpeed, rb.linearVelocity.y);
 
-        if (gunHeat > 0) {
-            gunHeat -= Time.deltaTime;
-        }
-
-        if (attack.action.ReadValue<float>() == 1 && gunHeat <= 0)
+        if (jump.action.ReadValue<float>() == 1 && isGrounded)
         {
-            gunHeat = cooloown;
-            Fire();
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
     }
 
-    void OrientMouse()
+    //Set all gound objects as "ground"
+    void OnCollisionEnter2D(Collision2D collision)
     {
-        Vector2 mousePos = Camera.main.ScreenToWorldPoint(pointerPosition.action.ReadValue<Vector2>());
-        Vector2 orientation = mousePos - rb.position;
-        rb.rotation = Mathf.Atan2(orientation.y, orientation.x) * Mathf.Rad2Deg - 90f;
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true;
+        }
     }
 
-    public GameObject bulletPrefab;
-    public Transform firePoint;
-    public float fireForce = 20f;
-
-    void Fire()
+    void OnCollisionExit(Collision collision)
     {
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        bullet.GetComponent<Rigidbody2D>().AddForce(firePoint.up * fireForce, ForceMode2D.Impulse);
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = false;
+        }
     }
 }
