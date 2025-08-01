@@ -3,6 +3,7 @@ using Unity.VisualScripting.InputSystem;
 using UnityEngine;
 using UnityEngine.Assertions.Comparers;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class PlayerController : MonoBehaviour
     private ContactFilter2D GroundContactFilter;
     private Rigidbody2D rb;
     private bool isGrounded => rb.IsTouching(GroundContactFilter);
-    
+
 
     [SerializeField]
     private InputActionReference walk, jump;
@@ -38,6 +39,15 @@ public class PlayerController : MonoBehaviour
         if (jump.action.ReadValue<float>() == 1 && isGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        //Death
+        if (collision.gameObject.CompareTag("Hazard"))
+        {
+            SceneManager.LoadScene("Assets/Scenes/Death Screen.unity");
         }
     }
 }
