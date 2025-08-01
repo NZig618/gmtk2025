@@ -10,16 +10,6 @@ public class SceneChanger : MonoBehaviour
     private Transform player;
     public float fadeTime = 1f;
 
-    public void QuitGame()
-    {
-        Application.Quit();
-    }
-
-    public void ChangeScene(string sceneToLoad)
-    {
-        SceneManager.LoadScene(sceneToLoad);
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
@@ -34,6 +24,6 @@ public class SceneChanger : MonoBehaviour
         yield return new WaitForSeconds(fadeTime);
         SceneManager.LoadScene(sceneToLoad);
         player = collision.transform;
-        player.position = newPlayerPosition; //This is a TEMPORARY placement until we add fades!
+        player.position = newPlayerPosition;
     }
 }
