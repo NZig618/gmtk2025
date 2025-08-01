@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         //Sets the parameters on the contact filter.
         GroundContactFilter.SetLayerMask(LayerMask.GetMask("Ground"));
-        GroundContactFilter.SetNormalAngle(90f, 90f);
+        GroundContactFilter.SetNormalAngle(45f, 135f);
     }
 
     // Update is called once per frame
