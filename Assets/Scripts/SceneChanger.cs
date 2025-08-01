@@ -15,6 +15,8 @@ public class SceneChanger : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             fadeAnim.Play("FadeToBlack");
+            player = collision.transform;
+            player.gameObject.SetActive(false);
             StartCoroutine(DelayFade(collision));
         }
     }
@@ -25,5 +27,6 @@ public class SceneChanger : MonoBehaviour
         SceneManager.LoadScene(sceneToLoad);
         player = collision.transform;
         player.position = newPlayerPosition;
+        player.gameObject.SetActive(true);
     }
 }
