@@ -645,6 +645,37 @@ MonoBehaviour:
   m_DefaultActionMap: PlayerInput
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!1 &766815501
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 766815502}
+  m_Layer: 0
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &766815502
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 766815501}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: -0.717, y: 0.04, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1077588987}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!1 &1077588982
 GameObject:
   m_ObjectHideFlags: 0
@@ -680,12 +711,19 @@ MonoBehaviour:
   moveSpeed: 8
   jumpForce: 30
   jumpSquat: 0.25
-  jumpCount: 2
   jumpCooldown: 0
+  gunHeat: 0.5
+  gunCooloown: 0
+  jumpCount: 2
   attackLvl: 2
   maxJumps: 2
   walk: {fileID: 6086796819210131495, guid: 38584e6ca06627b41acb2e6d01e50cd9, type: 3}
   jump: {fileID: 8605009467814621609, guid: 38584e6ca06627b41acb2e6d01e50cd9, type: 3}
+  attack: {fileID: 5238454631594772155, guid: 38584e6ca06627b41acb2e6d01e50cd9, type: 3}
+  bulletLvl1: {fileID: 925695608823484337, guid: 226da7e9b8f3f654198e2111180e35cd, type: 3}
+  bulletLvl2: {fileID: 925695608823484337, guid: 71e82681be7d18a479a1e5cc7c4d5d32, type: 3}
+  firePoint: {fileID: 766815502}
+  fireForce: 20
 --- !u!50 &1077588985
 Rigidbody2D:
   serializedVersion: 5
@@ -782,6 +820,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 761628394}
+  - {fileID: 766815502}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1077588988
