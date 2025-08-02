@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Runtime.InteropServices;
 using Unity.VisualScripting;
 using Unity.VisualScripting.InputSystem;
 using UnityEngine;
@@ -12,7 +14,7 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 5f;
     public float jumpForce = 30f;
     public float jumpSquat = 0.5f;
-     public float jumpCooldown = 0f;
+    public float jumpCooldown = 0f;
 
     // Attack parameters
     public float gunHeat = 0.25f;
@@ -70,7 +72,7 @@ public class PlayerController : MonoBehaviour
             jumpCount--;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
-        
+
         if (attack.action.ReadValue<float>() == 1 && gunCooloown <= 0)
         {
             gunCooloown = gunHeat;
@@ -87,10 +89,13 @@ public class PlayerController : MonoBehaviour
 
     void Fire()
     {
-        if (attackLvl == 1) {
+        if (attackLvl == 1)
+        {
             GameObject bullet = Instantiate(bulletLvl1, firePoint.position, firePoint.rotation);
             bullet.GetComponent<Rigidbody2D>().AddForce(firePoint.up * fireForce, ForceMode2D.Impulse);
-        } else if ( attackLvl >= 2) {
+        }
+        else if (attackLvl >= 2)
+        {
             GameObject bullet = Instantiate(bulletLvl2, firePoint.position, firePoint.rotation);
             bullet.GetComponent<Rigidbody2D>().AddForce(firePoint.up * fireForce, ForceMode2D.Impulse);
         }
@@ -101,7 +106,28 @@ public class PlayerController : MonoBehaviour
         //Death
         if (collision.gameObject.CompareTag("Hazard"))
         {
-            SceneManager.LoadScene("Assets/Scenes/Death Screen.unity");
+            fadeAnim.Play("FadeToBlack");
+            StartCoroutine(DelayPlayerFade("Assets/Scenes/Death Screen.unity"));
+        }
+    }
+
+    public Animator fadeAnim;
+    public float fadeTime = 1f;
+
+    IEnumerator DelayPlayerFade(String scene)
+    {
+        yield return new WaitForSeconds(fadeTime);
+        SceneManager.LoadScene(scene);
+    }
+
+    public UpgradeManager upgrader;
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("PowerUp"))
+        {
+            Destroy(collision.gameObject);
+            upgrader.upgradeCount++;
         }
     }
 }
