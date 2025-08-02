@@ -1,3 +1,4 @@
+using System;
 using Unity.VisualScripting;
 using Unity.VisualScripting.InputSystem;
 using UnityEngine;
@@ -9,7 +10,15 @@ public class PlayerController : MonoBehaviour
 {
     // Jump parameters
     public float moveSpeed = 5f;
-    public float jumpForce = 10f;
+    public float jumpForce = 30f;
+    public float jumpSquat = 0.5f;
+
+    //Upgade values
+    public float jumpCount = 2;
+    public float jumpCooldown = 0;
+    public float attackLvl = 2;
+
+    public float maxJumps = 2;
 
     // Physics logic
     private ContactFilter2D GroundContactFilter;
@@ -36,8 +45,19 @@ public class PlayerController : MonoBehaviour
         float moveDirection = walk.action.ReadValue<float>();
         rb.linearVelocity = new Vector2(moveDirection * moveSpeed, rb.linearVelocity.y);
 
-        if (jump.action.ReadValue<float>() == 1 && isGrounded)
+        if (isGrounded && jumpCooldown <= 0)
         {
+            jumpCount = maxJumps;
+        }
+
+        if (jumpCooldown > 0) {
+            jumpCooldown -= Time.deltaTime;
+        }
+
+        if (jump.action.ReadValue<float>() == 1 && jumpCount > 0 && jumpCooldown <= 0)
+        {
+            jumpCooldown = jumpSquat;
+            jumpCount--;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
     }

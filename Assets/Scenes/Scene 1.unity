@@ -678,7 +678,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 8
-  jumpForce: 25
+  jumpForce: 30
+  jumpSquat: 0.25
+  jumpCount: 2
+  jumpCooldown: 0
+  attackLvl: 2
+  maxJumps: 2
   walk: {fileID: 6086796819210131495, guid: 38584e6ca06627b41acb2e6d01e50cd9, type: 3}
   jump: {fileID: 8605009467814621609, guid: 38584e6ca06627b41acb2e6d01e50cd9, type: 3}
 --- !u!50 &1077588985
