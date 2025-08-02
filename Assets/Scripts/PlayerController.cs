@@ -1,3 +1,4 @@
+using System;
 using Unity.VisualScripting;
 using Unity.VisualScripting.InputSystem;
 using UnityEngine;
@@ -9,16 +10,28 @@ public class PlayerController : MonoBehaviour
 {
     // Jump parameters
     public float moveSpeed = 5f;
-    public float jumpForce = 10f;
+    public float jumpForce = 30f;
+    public float jumpSquat = 0.5f;
+     public float jumpCooldown = 0f;
+
+    // Attack parameters
+    public float gunHeat = 0.25f;
+    public float gunCooloown = 0f;
+
+    //Upgade values
+    public float jumpCount = 2;
+    public float attackLvl = 2;
+
+    public float maxJumps = 2;
 
     // Physics logic
     private ContactFilter2D GroundContactFilter;
     private Rigidbody2D rb;
-    private bool isGrounded => rb.IsTouching(GroundContactFilter);
+    private bool IsGrounded => rb.IsTouching(GroundContactFilter);
 
 
     [SerializeField]
-    private InputActionReference walk, jump;
+    private InputActionReference walk, jump, attack;
 
     // Create initial rigid body
     void Start()
@@ -36,9 +49,50 @@ public class PlayerController : MonoBehaviour
         float moveDirection = walk.action.ReadValue<float>();
         rb.linearVelocity = new Vector2(moveDirection * moveSpeed, rb.linearVelocity.y);
 
-        if (jump.action.ReadValue<float>() == 1 && isGrounded)
+        if (jumpCooldown > 0)
         {
+            jumpCooldown -= Time.deltaTime;
+        }
+
+        if (gunCooloown > 0)
+        {
+            gunCooloown -= Time.deltaTime;
+        }
+
+        if (IsGrounded && jumpCooldown <= 0)
+        {
+            jumpCount = maxJumps;
+        }
+
+        if (jump.action.ReadValue<float>() == 1 && jumpCount > 0 && jumpCooldown <= 0)
+        {
+            jumpCooldown = jumpSquat;
+            jumpCount--;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+        }
+        
+        if (attack.action.ReadValue<float>() == 1 && gunCooloown <= 0)
+        {
+            gunCooloown = gunHeat;
+            Fire();
+        }
+    }
+
+    public GameObject bulletLvl1;
+
+    public GameObject bulletLvl2;
+
+    public Transform firePoint;
+    public float fireForce = 20f;
+
+    void Fire()
+    {
+        if (attackLvl == 1) {
+            GameObject bullet = Instantiate(bulletLvl1, firePoint.position, firePoint.rotation);
+            bullet.GetComponent<Rigidbody2D>().AddForce(firePoint.up * fireForce, ForceMode2D.Impulse);
+        } else if ( attackLvl >= 2) {
+            GameObject bullet = Instantiate(bulletLvl2, firePoint.position, firePoint.rotation);
+            bullet.GetComponent<Rigidbody2D>().AddForce(firePoint.up * fireForce, ForceMode2D.Impulse);
         }
     }
 
