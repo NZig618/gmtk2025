@@ -126,8 +126,13 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("PowerUp"))
         {
-            Destroy(collision.gameObject);
-            upgrader.upgradeCount++;
+            PowerUp powerUp = collision.GetComponent<PowerUp>();
+            if (powerUp != null)
+            {
+                upgrader.AddUpgrade(powerUp.PowerUpId);
+                Destroy(collision.gameObject);
+                upgrader.upgradeCount++;
+            }
         }
     }
 }
