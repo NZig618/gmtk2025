@@ -22,9 +22,9 @@ public class PlayerController : MonoBehaviour
 
     //Upgade values
     public float jumpCount = 2;
-    public float attackLvl = 2;
+    public float attackLvl = 0;
 
-    public float maxJumps = 2;
+    public float maxJumps = 0;
 
     // Physics logic
     private ContactFilter2D GroundContactFilter;
@@ -129,9 +129,36 @@ public class PlayerController : MonoBehaviour
             PowerUp powerUp = collision.GetComponent<PowerUp>();
             if (powerUp != null)
             {
-                upgrader.AddUpgrade(powerUp.PowerUpId);
+                upgrader.HoldUpgrade(powerUp.PowerUpId, powerUp.PowerUpName);
                 Destroy(collision.gameObject);
-                upgrader.upgradeCount++;
+            }
+        } else if (collision.gameObject.CompareTag("Checkpoint")) {
+            if (upgrader.heldID > 0)
+            {
+                upgrader.AddUpgrade();
+                switch (upgrader.upgradeCount)
+                {
+                    case 1:
+                        maxJumps = 1;
+                        attackLvl = 0;
+                        break;
+                    case 2:
+                        maxJumps = 1;
+                        attackLvl = 1;
+                        break;
+                    case 3:
+                        maxJumps = 2;
+                        attackLvl = 1;
+                        break;
+                    case 4:
+                        maxJumps = 2;
+                        attackLvl = 2;
+                        break;
+                    default:
+                        maxJumps = 0;
+                        attackLvl = 0;
+                        break;
+                }
             }
         }
     }

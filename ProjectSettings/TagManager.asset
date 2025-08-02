@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Hazard
   - PowerUp
+  - Checkpoint
   layers:
   - Default
   - TransparentFX

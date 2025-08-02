@@ -416,8 +416,8 @@ MonoBehaviour:
   gunHeat: 0.5
   gunCooloown: 0
   jumpCount: 2
-  attackLvl: 2
-  maxJumps: 2
+  attackLvl: 0
+  maxJumps: 0
   walk: {fileID: 6086796819210131495, guid: 38584e6ca06627b41acb2e6d01e50cd9, type: 3}
   jump: {fileID: 8605009467814621609, guid: 38584e6ca06627b41acb2e6d01e50cd9, type: 3}
   attack: {fileID: 5238454631594772155, guid: 38584e6ca06627b41acb2e6d01e50cd9, type: 3}
@@ -427,6 +427,7 @@ MonoBehaviour:
   fireForce: 20
   fadeAnim: {fileID: 8642944777245463845}
   fadeTime: 1
+  upgrader: {fileID: 0}
 --- !u!1 &8473288068555133170
 GameObject:
   m_ObjectHideFlags: 0
