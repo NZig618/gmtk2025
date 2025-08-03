@@ -1,23 +1,39 @@
+using System;
+using System.Collections;
+using System.Runtime.InteropServices;
 using Unity.VisualScripting;
 using Unity.VisualScripting.InputSystem;
 using UnityEngine;
 using UnityEngine.Assertions.Comparers;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     // Jump parameters
     public float moveSpeed = 5f;
-    public float jumpForce = 10f;
+    public float jumpForce = 30f;
+    public float jumpSquat = 0.5f;
+    public float jumpCooldown = 0f;
+
+    // Attack parameters
+    public float gunHeat = 0.25f;
+    public float gunCooloown = 0f;
+
+    //Upgade values
+    public float jumpCount = 2;
+    public float attackLvl = 0;
+
+    public float maxJumps = 0;
 
     // Physics logic
     private ContactFilter2D GroundContactFilter;
     private Rigidbody2D rb;
-    private bool isGrounded => rb.IsTouching(GroundContactFilter);
-    
+    private bool IsGrounded => rb.IsTouching(GroundContactFilter);
+    private bool facingRight = false;
 
     [SerializeField]
-    private InputActionReference walk, jump;
+    private InputActionReference walk, jump, attack;
 
     // Create initial rigid body
     void Start()
@@ -26,7 +42,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         //Sets the parameters on the contact filter.
         GroundContactFilter.SetLayerMask(LayerMask.GetMask("Ground"));
-        GroundContactFilter.SetNormalAngle(90f, 90f);
+        GroundContactFilter.SetNormalAngle(45f, 135f);
     }
 
     // Update is called once per frame
@@ -35,9 +51,136 @@ public class PlayerController : MonoBehaviour
         float moveDirection = walk.action.ReadValue<float>();
         rb.linearVelocity = new Vector2(moveDirection * moveSpeed, rb.linearVelocity.y);
 
-        if (jump.action.ReadValue<float>() == 1 && isGrounded)
+        if (moveDirection > 0 && !facingRight) {
+            FlipChar();
+        } else if (moveDirection < 0 && facingRight) {
+            FlipChar();
+        }
+
+        if (jumpCooldown > 0)
         {
+            jumpCooldown -= Time.deltaTime;
+        }
+
+        if (gunCooloown > 0)
+        {
+            gunCooloown -= Time.deltaTime;
+        }
+
+        if (IsGrounded && jumpCooldown <= 0)
+        {
+            jumpCount = maxJumps;
+        }
+
+        if (jump.action.ReadValue<float>() == 1 && jumpCount > 0 && jumpCooldown <= 0)
+        {
+            jumpCooldown = jumpSquat;
+            jumpCount--;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
+
+        if (attack.action.ReadValue<float>() == 1 && gunCooloown <= 0)
+        {
+            gunCooloown = gunHeat;
+            Fire();
+        }
     }
+
+    public void FlipChar()
+    {
+        facingRight = !facingRight;
+        Vector3 curr = transform.localScale;
+        curr.x *= -1;
+        transform.localScale = curr;
+    }
+
+    public GameObject bulletLvl1;
+
+    public GameObject bulletLvl2;
+
+    public Transform firePoint;
+    public float fireForce = 20f;
+
+    void Fire()
+    {
+        if (attackLvl == 1)
+        {
+            GameObject bullet = Instantiate(bulletLvl1, firePoint.position, firePoint.rotation);
+            bullet.GetComponent<Rigidbody2D>().AddForce(firePoint.up * fireForce, ForceMode2D.Impulse);
+        }
+        else if (attackLvl >= 2)
+        {
+            GameObject bullet = Instantiate(bulletLvl2, firePoint.position, firePoint.rotation);
+            bullet.GetComponent<Rigidbody2D>().AddForce(firePoint.up * fireForce, ForceMode2D.Impulse);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        //Death
+        if (collision.gameObject.CompareTag("Hazard"))
+        {
+            Death();
+        }
+    }
+
+    public UpgradeManager upgrader;
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("PowerUp"))
+        {
+            PowerUp powerUp = collision.GetComponent<PowerUp>();
+            if (powerUp != null)
+            {
+                upgrader.HoldUpgrade(powerUp.PowerUpId, powerUp.PowerUpName);
+                Destroy(collision.gameObject);
+            }
+        }
+        else if (collision.gameObject.CompareTag("Checkpoint"))
+        {
+            if (upgrader.heldID > 0)
+            {
+                upgrader.AddUpgrade();
+                switch (upgrader.upgradeCount)
+                {
+                    case 1:
+                        maxJumps = 1;
+                        attackLvl = 0;
+                        break;
+                    case 2:
+                        maxJumps = 1;
+                        attackLvl = 1;
+                        break;
+                    case 3:
+                        maxJumps = 2;
+                        attackLvl = 1;
+                        break;
+                    case 4:
+                        maxJumps = 2;
+                        attackLvl = 2;
+                        break;
+                    default:
+                        maxJumps = 0;
+                        attackLvl = 0;
+                        break;
+                }
+            }
+        }
+    }
+
+    // public Animator fadeAnim;
+    // public float fadeTime = 1f;
+    public void Death()
+    {
+        SceneManager.LoadScene("Assets/Scenes/Death Screen.unity");
+        // fadeAnim.Play("FadeToBlack");
+        // StartCoroutine(DelayDeathFade());
+    }
+
+    // IEnumerator DelayDeathFade()
+    // {
+    //     yield return new WaitForSeconds(fadeTime);
+    //     SceneManager.LoadScene("Assets/Scenes/Death Screen.unity");
+    // } 
 }

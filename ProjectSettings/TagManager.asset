@@ -4,7 +4,11 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Ground
+  - Hazard
+  - PowerUp
+  - Checkpoint
+  - Bullet1
+  - Bullet2
   layers:
   - Default
   - TransparentFX
@@ -12,7 +16,7 @@ TagManager:
   - Ground
   - Water
   - UI
-  - 
+  - Destroyables
   - 
   - 
   - 
@@ -39,6 +43,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 1134416995
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
