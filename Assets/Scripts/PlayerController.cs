@@ -35,11 +35,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private InputActionReference walk, jump, attack;
 
+    //Animator
+    private Animator animator;
+
     // Create initial rigid body
     void Start()
     {
         //Define rigid body
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
         //Sets the parameters on the contact filter.
         GroundContactFilter.SetLayerMask(LayerMask.GetMask("Ground"));
         GroundContactFilter.SetNormalAngle(45f, 135f);
@@ -51,9 +55,12 @@ public class PlayerController : MonoBehaviour
         float moveDirection = walk.action.ReadValue<float>();
         rb.linearVelocity = new Vector2(moveDirection * moveSpeed, rb.linearVelocity.y);
 
-        if (moveDirection > 0 && !facingRight) {
+        if (moveDirection > 0 && !facingRight)
+        {
             FlipChar();
-        } else if (moveDirection < 0 && facingRight) {
+        }
+        else if (moveDirection < 0 && facingRight)
+        {
             FlipChar();
         }
 
@@ -74,6 +81,7 @@ public class PlayerController : MonoBehaviour
 
         if (jump.action.ReadValue<float>() == 1 && jumpCount > 0 && jumpCooldown <= 0)
         {
+            animator.SetBool("Grounded", false);
             jumpCooldown = jumpSquat;
             jumpCount--;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
@@ -84,6 +92,8 @@ public class PlayerController : MonoBehaviour
             gunCooloown = gunHeat;
             Fire();
         }
+
+        animator.SetFloat("Velocity", moveDirection);
     }
 
     public void FlipChar()
@@ -139,6 +149,12 @@ public class PlayerController : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Checkpoint"))
         {
+            var timer = GameObject.FindObjectsByType<Timer>(FindObjectsSortMode.None);
+            if (timer != null && timer.Length > 0)
+            {
+                timer[0].resetTime();   
+            }
+
             if (upgrader.heldID > 0)
             {
                 upgrader.AddUpgrade();

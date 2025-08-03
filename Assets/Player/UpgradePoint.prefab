@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 978500660663693750}
   - component: {fileID: 7796069343443270070}
   - component: {fileID: -8287108638094930596}
+  - component: {fileID: -5750446020631535136}
+  - component: {fileID: -649477199770954584}
   m_Layer: 0
   m_Name: UpgradePoint
   m_TagString: PowerUp
@@ -78,7 +80,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Sprite: {fileID: -1015464963357397816, guid: ba2ff648cafac4e448f3d7f996d1d8a2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -137,3 +139,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61ffa8c6689c3204b97af0b0865adc82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PowerUpId: 0
+  PowerUpName: 
+--- !u!111 &-5750446020631535136
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 10547219172122553}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: -1389029659575794908, guid: ba2ff648cafac4e448f3d7f996d1d8a2, type: 3}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
+--- !u!95 &-649477199770954584
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 10547219172122553}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: -2943085329707453250, guid: ba2ff648cafac4e448f3d7f996d1d8a2, type: 3}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
