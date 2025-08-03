@@ -106,18 +106,8 @@ public class PlayerController : MonoBehaviour
         //Death
         if (collision.gameObject.CompareTag("Hazard"))
         {
-            fadeAnim.Play("FadeToBlack");
-            StartCoroutine(DelayPlayerFade("Assets/Scenes/Death Screen.unity"));
+            Death();
         }
-    }
-
-    public Animator fadeAnim;
-    public float fadeTime = 1f;
-
-    IEnumerator DelayPlayerFade(String scene)
-    {
-        yield return new WaitForSeconds(fadeTime);
-        SceneManager.LoadScene(scene);
     }
 
     public UpgradeManager upgrader;
@@ -132,7 +122,9 @@ public class PlayerController : MonoBehaviour
                 upgrader.HoldUpgrade(powerUp.PowerUpId, powerUp.PowerUpName);
                 Destroy(collision.gameObject);
             }
-        } else if (collision.gameObject.CompareTag("Checkpoint")) {
+        }
+        else if (collision.gameObject.CompareTag("Checkpoint"))
+        {
             if (upgrader.heldID > 0)
             {
                 upgrader.AddUpgrade();
@@ -162,4 +154,19 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    // public Animator fadeAnim;
+    // public float fadeTime = 1f;
+    public void Death()
+    {
+        SceneManager.LoadScene("Assets/Scenes/Death Screen.unity");
+        // fadeAnim.Play("FadeToBlack");
+        // StartCoroutine(DelayDeathFade());
+    }
+
+    // IEnumerator DelayDeathFade()
+    // {
+    //     yield return new WaitForSeconds(fadeTime);
+    //     SceneManager.LoadScene("Assets/Scenes/Death Screen.unity");
+    // } 
 }

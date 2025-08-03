@@ -18,8 +18,10 @@ public class UpgradeManager : MonoBehaviour
     {
         upgradeText.text = "Upgrades: " + upgradeCount.ToString();
         var upgrades = GameObject.FindObjectsByType<PowerUp>(FindObjectsSortMode.None);
-        foreach (var upgrade in upgrades) {
-            if (IsUpgradeCollected(upgrade.PowerUpId)) {
+        foreach (var upgrade in upgrades)
+        {
+            if (IsUpgradeCollected(upgrade.PowerUpId))
+            {
                 Destroy(upgrade.gameObject);
             }
         }
@@ -37,8 +39,7 @@ public class UpgradeManager : MonoBehaviour
         {
             collectedUpgrades.Add(heldID);
             upgradeCount++;
-            heldID = 0;
-            heldText.text = "Held: None";
+            clearHeld();
         }
     }
 
@@ -47,5 +48,10 @@ public class UpgradeManager : MonoBehaviour
         return collectedUpgrades.Contains(id) || id == heldID;
     }
 
+    public void clearHeld()
+    {
+        heldID = 0;
+        heldText.text = "Held: None";
+    }
 }
 

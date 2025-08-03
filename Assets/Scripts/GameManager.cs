@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
     [Header("Persistent Objects")]
     public GameObject[] persistentObjects;
 
+    public bool isActive = true;
+
     private void Awake()
     {
         //If there is a GameManager already in the scene (global "instance" has a value attached) it destroys itself.
@@ -51,9 +53,40 @@ public class GameManager : MonoBehaviour
     private void OnSceneActivated(Scene lastScene, Scene nextScene)
     {
         //Determines if the scene is the main menu, and destroys all of this game manager's persistent objects if so.
-        if (nextScene.name == "MainMenu" || nextScene.name == "Death Screen")
+        if (nextScene.name == "MainMenu")
         {
             CleanUpAndDestroy();
+        }
+        else if (nextScene.name == "Death Screen")
+        {
+            isActive = false;
+            foreach (GameObject obj in persistentObjects)
+            {
+                if (obj != null)
+                {
+                    obj.SetActive(false);
+                }
+            }
+            
+            Transform player = persistentObjects[0].GetComponent<Transform>();
+            player.position = new Vector2(-3f, 0.2f);
+
+            UpgradeManager upgrader = this.gameObject.GetComponent<UpgradeManager>();
+            upgrader.clearHeld();
+
+            Timer tim = persistentObjects[2].GetComponent<Timer>();
+            tim.resetTime();
+        }
+        else if (!isActive)
+        {
+            isActive = true;
+            foreach (GameObject obj in persistentObjects)
+            {
+                if (obj != null)
+                {
+                    obj.SetActive(true);
+                }
+            }
         }
     }
 

@@ -15,13 +15,9 @@ public class Timer : MonoBehaviour
         currentTime = startTime;
     }
 
-    public Animator fadeAnim;
-    public float fadeTime = 1f;
-
     // Update is called once per frame
     void Update()
     {
-
         if (currentTime > 0)
         {
             currentTime -= Time.deltaTime;
@@ -30,19 +26,19 @@ public class Timer : MonoBehaviour
         if (currentTime <= 0)
         {
             currentTime = 0;
-            fadeAnim.Play("FadeToBlack");
-            StartCoroutine(DelayTimerDeath());
+            var player = GameObject.FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
+            if (player != null && player.Length > 0)
+            {
+                player[0].Death();   
+            }
         }
         //Print
         int seconds = Mathf.FloorToInt(currentTime % 60);
         int miliseconds = Mathf.FloorToInt((currentTime * 1000) % 1000);
         timerText.text = string.Format("{0:00}:{1:00}", seconds, miliseconds);
-
     }
     
-    IEnumerator DelayTimerDeath()
-    {
-        yield return new WaitForSeconds(fadeTime);
-        SceneManager.LoadScene("Assets/Scenes/Death Screen.unity");
+    public void resetTime() {
+        currentTime = 30;
     }
 }
