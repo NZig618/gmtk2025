@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
     private ContactFilter2D GroundContactFilter;
     private Rigidbody2D rb;
     private bool IsGrounded => rb.IsTouching(GroundContactFilter);
-
+    private bool facingRight = false;
 
     [SerializeField]
     private InputActionReference walk, jump, attack;
@@ -50,6 +50,12 @@ public class PlayerController : MonoBehaviour
     {
         float moveDirection = walk.action.ReadValue<float>();
         rb.linearVelocity = new Vector2(moveDirection * moveSpeed, rb.linearVelocity.y);
+
+        if (moveDirection > 0 && !facingRight) {
+            FlipChar();
+        } else if (moveDirection < 0 && facingRight) {
+            FlipChar();
+        }
 
         if (jumpCooldown > 0)
         {
@@ -78,6 +84,14 @@ public class PlayerController : MonoBehaviour
             gunCooloown = gunHeat;
             Fire();
         }
+    }
+
+    public void FlipChar()
+    {
+        facingRight = !facingRight;
+        Vector3 curr = transform.localScale;
+        curr.x *= -1;
+        transform.localScale = curr;
     }
 
     public GameObject bulletLvl1;
