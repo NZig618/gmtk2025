@@ -30,7 +30,7 @@ public class UpgradeManager : MonoBehaviour
     public void HoldUpgrade(int id, String name)
     {
         heldID = id;
-        heldText.text = "Held: " + name;
+        heldText.text = "Held: " + name + "\nReturn to tree!";
     }
 
     public void AddUpgrade()

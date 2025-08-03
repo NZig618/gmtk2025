@@ -35,15 +35,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private InputActionReference walk, jump, attack;
 
-    //Animator
-    private Animator animator;
-
     // Create initial rigid body
     void Start()
     {
         //Define rigid body
         rb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
         //Sets the parameters on the contact filter.
         GroundContactFilter.SetLayerMask(LayerMask.GetMask("Ground"));
         GroundContactFilter.SetNormalAngle(45f, 135f);
@@ -81,7 +77,6 @@ public class PlayerController : MonoBehaviour
 
         if (jump.action.ReadValue<float>() == 1 && jumpCount > 0 && jumpCooldown <= 0)
         {
-            animator.SetBool("Grounded", false);
             jumpCooldown = jumpSquat;
             jumpCount--;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
@@ -93,7 +88,6 @@ public class PlayerController : MonoBehaviour
             Fire();
         }
 
-        animator.SetFloat("Velocity", moveDirection);
     }
 
     public void FlipChar()
