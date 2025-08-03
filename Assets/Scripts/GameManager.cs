@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
     private void OnSceneActivated(Scene lastScene, Scene nextScene)
     {
         //Determines if the scene is the main menu, and destroys all of this game manager's persistent objects if so.
-        if (nextScene.name == "MainMenu")
+        if (nextScene.name == "MainMenu" || nextScene.name == "Victory")
         {
             CleanUpAndDestroy();
         }
